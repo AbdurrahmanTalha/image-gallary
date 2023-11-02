@@ -49,6 +49,15 @@ const images = [
 const DragAndDrop = () => {
     const [draggedItem, setDraggedItem] = useState(null);
     const [items, setItems] = useState(images);
+    const [selected, setSelected] = useState([]);
+
+    const onDelete = () => {
+        const filteredImages = items.filter(
+            (image) => !selected.includes(image.id)
+        );
+        setItems(filteredImages);
+        setSelected([]);
+    };
 
     const handleDragStart = (e, index) => {
         e.dataTransfer.setData("text/plain", index);
@@ -70,22 +79,66 @@ const DragAndDrop = () => {
     };
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-            {items.map((item, index) => (
-                <div
-                    key={item.id}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, index)}
-                    onDragOver={(e) => handleDragOver(e, index)}
-                    className="w-auto max-w-[300px] h-auto border-[1px] cursor-pointer"
-                >
-                    <img
-                        src={item.url}
-                        alt={`Image ${index + 1}`}
-                        className=""
-                    />
+        <div className="flex min-h-screen flex-col mx-auto">
+            {selected.length > 0 && (
+                <div className="ml-[93%]">
+                    <button
+                        className="bg-[#DD230A10] py-[8px] px-[20px] rounded-[8px] text-[#DD230A] font-bold mb-[10px] ml-auto mr-0"
+                        onClick={onDelete}
+                    >
+                        Delete
+                    </button>
                 </div>
-            ))}
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 mx-auto">
+                {/* 
+                     
+                 */}
+                {items.map((item, index) => {
+                    const isSelected = selected.some(
+                        (select) => select === item.id
+                    );
+
+                    return (
+                        <div
+                            key={item.id}
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, index)}
+                            onDragOver={(e) => handleDragOver(e, index)}
+                            className={`relative w-auto max-w-auto h-auto border-[1px] cursor-pointer ${
+                                index === 0
+                                    ? "col-span-2 row-span-2 "
+                                    : "h-[300px]"
+                            }`}
+                            onClick={() => {
+                                console.log(index);
+                                if (isSelected) {
+                                    const arr = selected.filter(
+                                        (img) => img !== item.id
+                                    );
+                                    setSelected(arr);
+                                } else {
+                                    setSelected([...selected, item.id]);
+                                }
+                            }}
+                        >
+                            <img
+                                src={item.url}
+                                alt={`Image ${index + 1}`}
+                                className="w-full h-auto"
+                            />
+                            <div
+                                className={`absolute inset-0  ${
+                                    isSelected
+                                        ? "opacity-50 bg-blue-500"
+                                        : "opacity-0 bg-black"
+                                } hover:opacity-50  transition-opacity`}
+                            ></div>
+                        </div>
+                    );
+                })}
+            </div>
+            {items.length === 0 && <h2 className="text-center">No Images</h2>}
         </div>
     );
 };

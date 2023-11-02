@@ -4,7 +4,7 @@ import DragAndDrop from "./DraggableItem";
 
 function App() {
     return (
-        <div className="">
+        <div className="p-[30px]">
             <DragAndDrop></DragAndDrop>
         </div>
     );

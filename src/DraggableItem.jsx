@@ -91,14 +91,8 @@ const DragAndDrop = () => {
                 </div>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 mx-auto">
-                {/* 
-                     
-                 */}
                 {items.map((item, index) => {
-                    const isSelected = selected.some(
-                        (select) => select === item.id
-                    );
-
+                    const isSelected = selected.includes(item.id);
                     return (
                         <div
                             key={item.id}
@@ -106,12 +100,9 @@ const DragAndDrop = () => {
                             onDragStart={(e) => handleDragStart(e, index)}
                             onDragOver={(e) => handleDragOver(e, index)}
                             className={`relative w-auto max-w-auto h-auto border-[1px] cursor-pointer ${
-                                index === 0
-                                    ? "col-span-2 row-span-2 "
-                                    : "h-[300px]"
+                                index === 0 && "col-span-2 row-span-2"
                             }`}
                             onClick={() => {
-                                console.log(index);
                                 if (isSelected) {
                                     const arr = selected.filter(
                                         (img) => img !== item.id
